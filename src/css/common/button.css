@@ -1,0 +1,26 @@
+/* quy dinh mac dinh cho button */
+
+.button {
+    height: 40px;
+    border-radius: 4px;
+    color: #fff;
+    padding-left: 24px;
+    padding-right: 24px;
+    text-align: center;
+    /* background-color: #019160; */
+    /* chinh cho text vao chinh giua*/
+    line-height: 40px;
+    display: inline-block;
+    min-width: 75px;
+}
+
+
+/* quy dinh khi hover vao button */
+
+.button:hover {
+    background-color: #2FBE8E;
+}
+
+.button:active {
+    background-color: #01B075;
+}

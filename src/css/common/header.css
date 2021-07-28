@@ -1,0 +1,90 @@
+﻿.header {
+    /* float: left; */
+    margin-left: 221px;
+    width: calc(100% - 221px);
+    height: 48px;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #e5e5e5;
+    align-items: center;
+}
+
+.header .header-customer-infor {
+    display: flex;
+    margin-left: 16px;
+}
+
+.header .header-customer-infor .header-customer-infor-text {
+    /* float: left; */
+    line-height: 48px;
+    border-style: none;
+}
+
+.header .header-customer-infor .header-customer-infor-dropdown-icon {
+    /* float: left; */
+    display: flex;
+    height: 40px;
+    width: auto;
+    /* co the dung align-self: center; */
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* margin: auto 0; */
+    /* margin-left: 10px; */
+    /* text-align: center; */
+    align-items: center;
+    align-self: auto;
+    margin-top: 4px;
+    /* border: 1px solid #000000; */
+}
+
+.header .header-customer-infor .header-customer-infor-dropdown-icon:hover {
+    background-color: #bbb;
+}
+
+.header .header-customer-infor .header-customer-infor-dropdown-icon .fa-chevron-down {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.header .header-infor {
+    display: flex;
+    position: absolute;
+    right: 0px;
+}
+
+.header .header-infor .header-infor-avatar {
+    /* float: right; */
+    /*display: flex;*/
+    width: 24px;
+    height: 24px;
+    background-image: url('../../assets/icon/avatar-default.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* border: 1px solid #000000; */
+    margin-right: 16px;
+    align-self: center;
+}
+
+.header .header-infor .header-infor-name {
+    /* float: right; */
+    /* display: flex; */
+    /* position: absolute; */
+    margin-right: 52px;
+    text-align: center;
+    line-height: 48px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.header .header-infor .header-infor-option-icon {
+    float: right;
+    display: flex;
+    position: absolute;
+    right: 16px;
+    width: 20px;
+    height: 20px;
+    /* border: 1px solid #000000; */
+    align-self: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
