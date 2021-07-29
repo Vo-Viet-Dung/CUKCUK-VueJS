@@ -1,6 +1,6 @@
 <template >
     <div>
-        <div class="wrap ">
+        <!-- <div class="wrap "> -->
             <div class="box-infor ">
             <div class="box-infor-avatar ">
                 <div class="avatar-image ">
@@ -10,9 +10,9 @@
 
                     <p>.jpg, .jpeg, .png, .gif)</p>
                 </div>
-            </div>s
             </div>
-        </div>
+            </div>
+        <!-- </div> -->
     </div>
 </template>
 <script>

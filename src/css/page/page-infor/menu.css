@@ -2,12 +2,13 @@
     width: 225px;
     height: calc(900px - 49px - 48px);
     border-right: 1px;
+    z-index: 40;
 }
 
 .box-infor-avatar .avatar-image {
     width: 150px;
     height: 150px;
-    background-image: url("../../../content/img/default-avatar.jpg");
+    background-image: url("../../../assets/img/default-avatar.jpg");
     background-size: contain;
     background-repeat: no-repeat;
     align-items: center;
