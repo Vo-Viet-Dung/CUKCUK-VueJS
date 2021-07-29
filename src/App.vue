@@ -23,6 +23,7 @@ export default {
 <style>
   /* @import url("../css/common/main.css"); */
   @import '../src/css/common/main.css';
+   @import '../src/css/common/text-align.css';
   @import '../src/css/common/header.css';
   @import '../src/css/common/navbar.css';
   @import '../src/css/common/content.css';  
