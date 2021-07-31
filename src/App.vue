@@ -2,10 +2,7 @@
   <div id="app">
     <Header/>
     <NavBar/>
-    <Content/>
-    <ModalBox>
-    </ModalBox>
-    
+    <Content/>    
   </div>
 </template>
 
@@ -13,16 +10,13 @@
 import NavBar from '../src/components/layout/theNavBar.vue'
 import Header from '../src/components/layout/theHeader.vue'
 import Content from '../src/components/layout/theContent.vue'
-// import HeaderModal from '../src/components/ModalBox/TheHeaderModal.vue'
-// import NavbarModal from '../src/components/ModalBox/TheNavbarModal.vue'
-import ModalBox from '../src/components/ModalBox/TheModal.vue'
+
 export default {
   name: 'App',
   components: {
     NavBar,
     Header,
-    Content,
-    ModalBox
+    Content
   }
 }
 </script>

@@ -9,7 +9,7 @@
                 </div>
                 <div class="content-delete-employee-button-text">Xóa nhân viên</div>
             </div>
-            <div class="content-add-employee-button">
+            <div class="content-add-employee-button" @click="showModalBox()">
                 <div class="content-add-employee-button-icon">
                     <img src="../../assets/icon/add.png" />
                 </div>
@@ -64,6 +64,7 @@
                 <!-- <img src="../../assets/icon/refresh.png" /> -->
             </div>
         </div>
+        
         <div class="grid ">
             <!-- <div class="grid-header"> -->
             <table id="tbListDataEmployee" border="0" cellspacing="0">
@@ -83,29 +84,27 @@
                         <th>Tình trạng công việc</th>
                     </tr>
                 </thead>
-                <tbody><tr v-for="employee in employee" :key="employee.EmployeeId" employeeid="28a65d40-ef90-11eb-94eb-42010a8c0002">
-    <td class="table-checkbox"><input type="checkbox"></td>
-    <td>1</td>
-     <td>{{employee.EmployeeCode}}</td>
-     <td>{{employee.FullName}}</td>
-     <td>{{employee.GenderName}}</td>
-     <td class="align-center">{{employee.DateOfBirth}}</td>
-     <td>{{employee.PhoneNumber}}</td>
-     <td >{{employee.Email}}</td>
-     <td >{{employee.PositionName}}</td>
-     <td>{{employee.DepartmentName}}</td>
-     <td class="align-right">{{employee.Salary}}</td>
-     <td>{{employee.WorkStatus}}</td>
- </tr></tbody>
-                <!-- </table>
-            </div>
-            <div class="grid-body ">
-                <table border="1px solid #000 " cellspacing="0 "> -->
                 <tbody>
+                <tr  v-for="employee in employee" :key="employee.EmployeeId" @dblclick="dbClickHandle(employee.EmployeeId)">
+                    <td class="table-checkbox"><input type="checkbox" ></td>
+                    <td>1</td>
+                    <td>{{employee.EmployeeCode}}</td>
+                    <td>{{employee.FullName}}</td>
+                    <td>{{employee.GenderName}}</td>
+                    <td class="align-center">{{formatDate(employee.DateOfBirth)}}</td>
+                    <td>{{employee.PhoneNumber}}</td>
+                    <td >{{employee.Email}}</td>
+                    <td >{{employee.PositionName}}</td>
+                    <td>{{employee.DepartmentName}}</td>
+                    <td class="align-right">{{formatSalary(employee.Salary)}}</td>
+                    <td>{{employee.WorkStatus}}</td>
+                </tr>
                 </tbody>
             </table>
             <!-- </div> -->
-
+        <div>
+         <ModalBox :mode="modeForm" :modalBoxShow="modalBoxShow" :employeeId="employeeId" v-on:hideModalBox="hideModalBox()" />
+        </div>
         </div>
         <div class="paging-bar ">
             <div class="paging-bar-note-left ">Hiển thị 1-10/1000 nhân viên</div>
@@ -137,22 +136,29 @@
                 </div>
             </div>
         </div>
+        
     </div>
+
     <!-- </div> -->
 </template>
 <script>
 import axios from 'axios';
+import ModalBox from '../ModalBox/TheModal.vue'
 // import VueAxios from 'vue-axios';
 export default {
     name: 'Content',
+    components: {
+        ModalBox,
+    },
     props: {
         msg: String
     },
-    created() {
+    mounted(){
         var vm = this;
         axios.get("http://cukcuk.manhnv.net/v1/Employees").then(res=> {
                 console.log(res);
                 vm.employee = res.data;
+
         }).catch(res=>{
             console.log(res);
         })
@@ -160,8 +166,48 @@ export default {
     data(){
         return {
             employee: [],
+            employeeId: '',
+            modalBoxShow: false,
+            modeForm: 0,
         };
     },
+    methods:{
+        /**
+         * Xu ly su kien double click vao mot hang trong bang thong tin nhan vien
+         */
+        dbClickHandle(employeeId){
+                this.modalBoxShow = !this.modalBoxShow;
+                this.employeeId = employeeId;
+                this.modeForm = 1; //che do sua thong tin nhan vien
+                console.log(this.employeeId);
+
+        },
+        showModalBox(){
+            console.log("click");
+            this.modalBoxShow = !this.modalBoxShow;
+            this.modeForm = 0; //Che do them nhan vien moi vao danh sach
+        },
+        hideModalBox(){
+            this.modalBoxShow = !this.modalBoxShow;
+        },
+        formatDate(date){
+            var rel = "";
+            var word = date.split('-');
+            for(var i = 0; i < 2;  i++){
+                rel += word[2][i];
+            }
+            return rel+= '/' + word[1] + '/' + word[0];
+        },
+        formatSalary(money){
+            if (Number.isNaN(money)) {
+                console.log("Khong co luong");
+                return "";
+            } else {
+                var num = money.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                return num;
+            }
+        },
+    }
 
 };
 </script>

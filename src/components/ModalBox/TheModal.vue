@@ -1,10 +1,10 @@
 <template >
     <div>
-           <div class="wrap ">
+           <div class="wrap " :style="{display: modalBoxState}">
         <div class="box-infor ">
             <div class="box-infor-header ">
                 <div class="header-title "><b>THÔNG TIN NHÂN VIÊN</b></div>
-                <div class="header-exit-icon " id="exit ">
+                <div class="header-exit-icon " id="exit " @click="changeState()">
                     <i class="fas fa-times "></i>
                 </div>
             </div>
@@ -28,8 +28,8 @@
                         <p class="col-2">Họ và tên(<span>*</span>)</p>
                     </div>
                     <div class="input-row ">
-                        <input class="col-1 input " require type="text " id="textEmployeeCode">
-                        <input class="input " require type="text " id="textName">
+                        <input class="col-1 input " require type="text " id="textEmployeeCode" v-model="employee.EmployeeCode">
+                        <input class="input " require type="text " id="textName" v-model="employee.FullName">
                     </div>
                     <!-- Div ngay sinh, gioi tinh -->
                     <div class="title-row ">
@@ -41,7 +41,7 @@
 
                             <div class="drop-down">
                                 <div class="drop-down-box">
-                                    <input type="date" class="combo-box-input" id="textDateOfBirth">
+                                    <input type="date" class="combo-box-input" id="textDateOfBirth" v-model="employee.DateOfBirth">
                                     <!-- <div class="drop-down-icon">
                                         <i class="far fa-calendar "></i>
                                     </div> -->
@@ -59,7 +59,7 @@
                             <!-- <i class="fas fa-chevron-down "></i> -->
                             <div class="drop-down">
                                 <div class="drop-down-box">
-                                    <input type="text" class="combo-box-input" id="textGender">
+                                    <input type="text" class="combo-box-input" id="textGender" v-model="employee.GenderName">
                                     <div class="drop-down-icon" id="sex">
                                         <i class="fas fa-chevron-down "></i>
                                     </div>
@@ -77,11 +77,11 @@
                         <p class="col-2">Ngày cấp</p>
                     </div>
                     <div class="input-row ">
-                        <input class="col-1 input " require type="text " value="1234567890 " id="textIdentitesNumber">
+                        <input class="col-1 input " require type="text " value="1234567890 " id="textIdentitesNumber" v-model="employee.IdentityNumber">
                         <div class="calendar day-supply">
                             <div class="drop-down">
                                 <div class="drop-down-box">
-                                    <input type="date" class="combo-box-input" id="textIdentitesDate">
+                                    <input type="date" class="combo-box-input" id="textIdentitesDate" v-model="employee.IdentityDate">
                                     <!-- <div class="drop-down-icon">
                                         <i class="far fa-calendar "></i>
                                     </div> -->
@@ -100,7 +100,7 @@
                         <p class="col-1 ">Nơi cấp</p>
                     </div>
                     <div class="input-row ">
-                        <input class="col-1 input" type="text " value="TP Hà Nội " id="textIdentitiesPlace">
+                        <input class="col-1 input" type="text " value="TP Hà Nội " id="textIdentitiesPlace" v-model="employee.IndentityPlace">
                     </div>
                     <!-- Thông tin lien lac -->
                     <div class="title-row ">
@@ -108,8 +108,8 @@
                         <p class="col-2">Số điện thoại (<span>*</span>)</p>
                     </div>
                     <div class="input-row ">
-                        <input class="col-1 input " require type="text " value="dungvv117@gmail.com" id="textEmail">
-                        <input class="input" require type="text " value="0123456789 " id="textPhoneNumber">
+                        <input class="col-1 input " require type="text " value="dungvv117@gmail.com" id="textEmail" v-model="employee.Email">
+                        <input class="input" require type="text " value="0123456789 " id="textPhoneNumber" v-model="employee.PhoneNumber">
                     </div>
                 </div>
                 <div class="content-job-infor ">
@@ -142,7 +142,7 @@
                         <div class="department ">
                             <div class="drop-down">
                                 <div class="drop-down-box">
-                                    <input type="text" class="combo-box-input" id="textWorkspace-form">
+                                    <input type="text" class="combo-box-input" id="textWorkspace-form" v-model="employee.DepartmentName">
                                     <div class="drop-down-icon" id="workspace-form-icon">
                                         <i class="fas fa-chevron-down " for="dropdown"></i>
                                     </div>
@@ -162,9 +162,9 @@
                         <p class="col-2">Mức lương cơ bản</p>
                     </div>
                     <div class="input-row salary-box ">
-                        <input class="col-1 input" type="text " id="textTaxNumber">
+                        <input class="col-1 input" type="text " id="textTaxNumber" v-model="employee.PersonalTaxCode">
                         <div class="salary" id="salary">
-                            <input class="col-2" type="text" id="textSalary" name="amount">
+                            <input class="col-2" type="text" id="textSalary" name="amount" v-model="employee.Salary">
                             <span>(VNĐ)</span>
                         </div>
 
@@ -178,7 +178,7 @@
                         <div class="calendar col-1 day-in ">
                             <div class="drop-down ">
                                 <div class="drop-down-box ">
-                                    <input type="date" class="combo-box-input " id="textDayIn">
+                                    <input type="date" class="combo-box-input " id="textDayIn" v-model="employee.JoinDate">
                                     <!-- <div class="drop-down-icon ">
                                         <i class="far fa-calendar "></i>
                                     </div> -->
@@ -194,7 +194,7 @@
                         <div class="calendar ">
                             <div class="drop-down ">
                                 <div class="drop-down-box ">
-                                    <input type="text " class="combo-box-input " id="textWorkStatus">
+                                    <input type="text " class="combo-box-input " id="textWorkStatus" v-model="employee.WorkSatus">
                                     <div class="drop-down-icon " id="work-status-icon">
                                         <i class="fas fa-chevron-down " for="dropdown "></i>
                                     </div>
@@ -212,12 +212,12 @@
             </div>
             <div class="box-infor-footer ">
                 <div class="box-infor-footer-btn ">
-                    <div class="box-infor-footer-btn-cancel ">
+                    <div class="box-infor-footer-btn-cancel " @click="changeState()">
                         <p>
                             Hủy
                         </p>
                     </div>
-                    <div class="box-infor-footer-btn-save button ">
+                    <div class="box-infor-footer-btn-save button " id="btn-save" @click="saveEditEmployee()">
                         <i class="far fa-save "></i>
                         <div class="box-infor-footer-btn-save-text ">
                             <p>
@@ -238,12 +238,102 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
+import moment from 'moment';
 export default {
     name: 'ModalBox',
   props: {
-    msg: String
+    //Bien tat/bat form thong tin chi tiet  
+    modalBoxShow: Boolean,
+    // Ma Id cua nhan vien
+    employeeId:{
+        type: String,
+        default: '',
+        require: true,
+    },
+    // Che do hien thi ung voi them moi nhan vien hay chinh sua thong tin
+    mode:{
+        type: Number,
+        default: 0,  //0 ung voi them moi, 1 ung voi sua
+        require: true,
+    }
+  },
+  data(){
+      return {
+          show: true,
+          employee: {},
+          dataGender: [
+              { GenderName: "Nữ"},
+              {GenderName: "Nam"},
+              {GenderName: "Không xác định"},
+          ],
+      };
+  },
+  computed: {
+      modalBoxState(){
+          if(this.modalBoxShow){
+              return "flex";
+          }else{
+              return "none";
+          }
+      },
+  },
+  methods: {
+      /**
+       * Thay đổi trạng thái ẩn/hiện của modalBox
+       */
+      changeState(){
+          this.$emit('hideModalBox');
+      },
+      formatDate(date){
+            if (date) {
+                return moment(String(date)).format('YYYY/MM/DD')
+            }
+        },
+      saveEditEmployee(){
+          let vm = this;
+          if(vm.mode == 0){
+              axios.post(`http://cukcuk.manhnv.net/v1/employees`, vm.employee)
+              .then(res=>{
+                  console.log(res)
+                  vm.changeState();
+              }).catch(err=>{
+                  console.error(err);
+              })
+          }else{
+              axios.put(`http://cukcuk.manhnv.net/v1/employees/${vm.employeeId}`, vm.employee)
+              .then(res=>{
+                  console.log(res);
+                  vm.changeState();
+              }).catch(err=>{
+                  console.error(err);
+              })
+          }
+      },
+  },
+  watch:{
+      employee: function(){
+          console.log(this.employee);
+      },
+      employeeId:function(value){
+          //Neu ma Id cua nhan vien thay doi thi thuc hien lay lai du lieu moi
+          let vm = this;
+          axios.get(`http://cukcuk.manhnv.net/v1/employees/${value}`)
+          .then(res=>{
+              vm.employee = res.data;
+          })
+          .catch(err =>{
+              console.error(err);
+          })
+      },
+      mode: function(){
+          //Neu la them moi nhan vien thi don toan bo du lieu trong form thong tin chi tiet
+          if(this.mode == 0){
+              this.employee = {};
+          }
+      }
   }
-}
+};
 </script>
 <style lang="">
     
