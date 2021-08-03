@@ -142,6 +142,7 @@
     <!-- </div> -->
 </template>
 <script>
+
 import axios from 'axios';
 import ModalBox from '../ModalBox/TheModal.vue'
 // import VueAxios from 'vue-axios';
@@ -180,6 +181,8 @@ export default {
                 this.employeeId = employeeId;
                 this.modeForm = 1; //che do sua thong tin nhan vien
                 console.log(this.employeeId);
+                console.log(this.employee);
+                
 
         },
         showModalBox(){
@@ -191,20 +194,26 @@ export default {
             this.modalBoxShow = !this.modalBoxShow;
         },
         formatDate(date){
-            var rel = "";
-            var word = date.split('-');
-            for(var i = 0; i < 2;  i++){
-                rel += word[2][i];
+            if(date){
+                var rel = "";
+                var word = date.split('-');
+                for(var i = 0; i < 2;  i++){
+                    rel += word[2][i];
+                }
+                return rel+= '/' + word[1] + '/' + word[0];
+
+            }else{
+                return "";
             }
-            return rel+= '/' + word[1] + '/' + word[0];
+            
         },
         formatSalary(money){
-            if (Number.isNaN(money)) {
-                console.log("Khong co luong");
-                return "";
-            } else {
+            if (money) {
                 var num = money.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
                 return num;
+            } else {
+                console.log("Khong co luong");
+                return "";
             }
         },
     }

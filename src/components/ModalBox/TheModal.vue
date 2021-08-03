@@ -238,8 +238,8 @@
     </div>
 </template>
 <script>
-import axios from 'axios';
 import moment from 'moment';
+import axios from 'axios';
 export default {
     name: 'ModalBox',
   props: {
@@ -285,10 +285,10 @@ export default {
       changeState(){
           this.$emit('hideModalBox');
       },
-      formatDate(date){
+      formatDateForm(date){
             if (date) {
-                return moment(String(date)).format('YYYY/MM/DD')
-            }
+                return moment(String(date)).format('YYYY-MM-DD')
+            }else{return "";}
         },
       saveEditEmployee(){
           let vm = this;
@@ -313,7 +313,15 @@ export default {
   },
   watch:{
       employee: function(){
-          console.log(this.employee);
+        console.log(this.employee);
+
+        var dob = this.employee.DateOfBirth;
+        this.employee.DateOfBirth = this.formatDateForm(dob);
+        console.log(this.employee.DateOfBirth);
+
+        var IndentityDate = this.employee.IdentityDate;
+        this.employee.IdentityDate = this.formatDateForm(IndentityDate);
+        console.log(this.employee.IdentityDate);
       },
       employeeId:function(value){
           //Neu ma Id cua nhan vien thay doi thi thuc hien lay lai du lieu moi
