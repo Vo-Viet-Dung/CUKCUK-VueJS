@@ -27,7 +27,7 @@
                 <div class="content-option-workspace-icon">
                     <i class="fas fa-chevron-down"></i>
                 </div> -->
-                <div class="drop-down">
+                <!-- <div class="drop-down">
                     <div class="drop-down-box">
                         <input type="text" class="combo-box-input" id="department-input" placeholder="Tất cả phòng ban">
                         <div class="drop-down-icon" id='workspace'>
@@ -35,36 +35,19 @@
                         </div>
                     </div>
                     <ul class="drop-down-list Workspace" for="dropdown-list">
-                        <!-- <li class="select">Phòng nhân sự</li>
-                        <li class="drop-down-item">Phòng hành chính</li>
-                        <li class="drop-down-item">Phòng công nghệ</li>
-                        <li class="drop-down-item">Phòng đào tạo</li> -->
+                        
                     </ul>
-                </div>
+                </div> -->
+                <Combobox :api='"http://cukcuk.manhnv.net/api/Department"' :type='"Department"' :mode="1"/>
             </div>
             <div class="content-option-position">
-                <!-- <div class="content-option-position-text">Tất cả các vị trí</div>
-                <div class="content-option-position-icon">
-                    <i class="fas fa-chevron-down"></i>
-                </div> -->
-                <div class="drop-down-box">
-                    <input type="text" class="combo-box-input" id="position-input" placeholder="Tất cả các vị trí">
-                    <div class="drop-down-icon" id="position">
-                        <i class="fas fa-chevron-down "></i>
-                    </div>
-                </div>
-                <ul class="drop-down-list Position" for="dropdown-list">
-                    <!-- <li class="select">Tổng giám đốc</li>
-                    <li class="drop-down-item">Nhân viên</li>
-                    <li class="drop-down-item">Fresher</li>
-                    <li class="drop-down-item">Trưởng phòng</li> -->
-                </ul>
+                 <Combobox :api='"http://cukcuk.manhnv.net/v1/Positions"' :type='"Position"' :mode="1"/>
             </div>
+           
             <div class="content-option-reload">
                 <!-- <img src="../../assets/icon/refresh.png" /> -->
             </div>
         </div>
-        
         <div class="grid ">
             <!-- <div class="grid-header"> -->
             <table id="tbListDataEmployee" border="0" cellspacing="0">
@@ -145,11 +128,13 @@
 
 import axios from 'axios';
 import ModalBox from '../ModalBox/TheModal.vue'
+import Combobox from '../base/BaseComboBox.vue'
 // import VueAxios from 'vue-axios';
 export default {
     name: 'Content',
     components: {
         ModalBox,
+        Combobox,
     },
     props: {
         msg: String

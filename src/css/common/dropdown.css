@@ -1,13 +1,15 @@
 .drop-down {
     width: 222px;
     margin-left: 0px;
+    z-index: 9;
 }
 
 .drop-down-box {
     display: flex;
     width: 100%;
     height: 40px;
-    /* border: 1px solid #000; */
+    border: 1px solid #bbb;
+    background-color: #fff;
     border-radius: 4px;
 }
 
@@ -93,4 +95,9 @@
 
 .drop-down-item:hover {
     background-color: #bbb;
+}
+
+.combobox-data-active {
+    display: block;
+    z-index: 9;
 }

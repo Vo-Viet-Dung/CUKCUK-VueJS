@@ -28,7 +28,7 @@
                         <p class="col-2">Họ và tên(<span>*</span>)</p>
                     </div>
                     <div class="input-row ">
-                        <input class="col-1 input " require type="text " id="textEmployeeCode" v-model="employee.EmployeeCode">
+                        <input class="col-1 input " require type="text " id="textEmployeeCode" v-model="employee.EmployeeCode" autofocus>
                         <input class="input " require type="text " id="textName" v-model="employee.FullName">
                     </div>
                     <!-- Div ngay sinh, gioi tinh -->
@@ -124,36 +124,10 @@
                     </div>
                     <div class="input-row ">
                         <div class="calendar col-1 ">
-                            <div class="drop-down">
-                                <div class="drop-down-box">
-                                    <input type="text" class="combo-box-input" id="textPosition-form">
-                                    <div class="drop-down-icon" id="position-form-icon">
-                                        <i class="fas fa-chevron-down "></i>
-                                    </div>
-                                </div>
-                                <ul class="drop-down-list Position-form">
-                                    <!-- <li class="select">Tổng giám đốc</li>
-                                    <li class="drop-down-item">Nhân viên</li>
-                                    <li class="drop-down-item">Fresher</li>
-                                    <li class="drop-down-item">Trưởng Phòng</li> -->
-                                </ul>
-                            </div>
+                            <Combobox :api='"http://cukcuk.manhnv.net/v1/Positions"' :type='"Position"' :mode="1"/>
                         </div>
                         <div class="department ">
-                            <div class="drop-down">
-                                <div class="drop-down-box">
-                                    <input type="text" class="combo-box-input" id="textWorkspace-form" v-model="employee.DepartmentName">
-                                    <div class="drop-down-icon" id="workspace-form-icon">
-                                        <i class="fas fa-chevron-down " for="dropdown"></i>
-                                    </div>
-                                </div>
-                                <ul class="drop-down-list Workspace-form">
-                                    <!-- <li class="select">Phòng nhân sự</li>
-                                    <li class="drop-down-item">Phòng hành chính</li>
-                                    <li class="drop-down-item">Phòng công nghệ</li>
-                                    <li class="drop-down-item">Phòng đào tạo</li> -->
-                                </ul>
-                            </div>
+                             <Combobox :api='"http://cukcuk.manhnv.net/api/Department"' :type='"Department"' :mode="1"/>
                         </div>
                     </div>
                     <!-- Thông tin thuế và lương -->
@@ -212,6 +186,12 @@
             </div>
             <div class="box-infor-footer ">
                 <div class="box-infor-footer-btn ">
+                    <div class="box-infor-footer-btn-delete " v-if="mode == 1" @click="deleteEmployee()">
+                        <i class="far fa-trash-alt"></i>
+                        <p>
+                            Xóa
+                        </p>
+                    </div>
                     <div class="box-infor-footer-btn-cancel " @click="changeState()">
                         <p>
                             Hủy
@@ -225,12 +205,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="box-infor-footer-btn-delete ">
-                        <i class="far fa-trash-alt"></i>
-                        <p>
-                            Xóa
-                        </p>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -240,8 +215,12 @@
 <script>
 import moment from 'moment';
 import axios from 'axios';
+import Combobox from '../base/BaseComboBox.vue'
 export default {
     name: 'ModalBox',
+    components: {
+        Combobox,
+    },
   props: {
     //Bien tat/bat form thong tin chi tiet  
     modalBoxShow: Boolean,
@@ -310,6 +289,16 @@ export default {
               })
           }
       },
+      deleteEmployee(){
+          let vm = this;
+          axios.delete(`http://cukcuk.manhnv.net/v1/employees/${vm.employeeId}`, vm.employee)
+              .then(res=>{
+                  console.log(res);
+                  vm.changeState();
+              }).catch(err=>{
+                  console.error(err);
+              })
+      },
   },
   watch:{
       employee: function(){
@@ -322,6 +311,9 @@ export default {
         var IndentityDate = this.employee.IdentityDate;
         this.employee.IdentityDate = this.formatDateForm(IndentityDate);
         console.log(this.employee.IdentityDate);
+
+        var dayIn = this.employee.JoinDate;
+        this.employee.JoinDate = this.formatDateForm(dayIn);
       },
       employeeId:function(value){
           //Neu ma Id cua nhan vien thay doi thi thuc hien lay lai du lieu moi
