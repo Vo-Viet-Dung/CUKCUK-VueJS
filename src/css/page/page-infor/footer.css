@@ -30,6 +30,9 @@
     border-radius: 4px;
     text-align: center;
     border: 1px;
+    background-color: #bbb;
+    margin-left: 8px;
+    margin-right: 8px;
     align-items: center;
     align-self: center;
     cursor: pointer;
