@@ -267,7 +267,7 @@
               <i class="far fa-trash-alt"></i>
               <p>Xóa</p>
             </div>
-            <div class="box-infor-footer-btn-cancel" @click="changeState()">
+            <div class="box-infor-footer-btn-cancel" @click="changePopup()">
               <p>Hủy</p>
             </div>
             <div
@@ -380,6 +380,10 @@ export default {
       this.$emit("warningSave");
       // this.$emit('tableUpdated');
     },
+    changePopupDelete() {
+      this.$emit("warningDelete");
+      // this.$emit('tableUpdated');
+    },
     /**
      * Thay đổi trạng thái ẩn/hiện của modalBox
      */
@@ -443,7 +447,7 @@ export default {
         this.isNull = false;
       } else {
         this.isNull = true;
-        // alert("chưa nhập tên");
+        alert("Chưa nhập những trường dữ liệu bắt buộc");
       }
     },
     /**
@@ -470,6 +474,9 @@ export default {
         e.target.style.border = "1px solid #bbbbbb";
       }
     },
+    /**
+     * Xu ly su kien blur cua Input Email
+     */
     handleBlurEmail(e) {
       if (e.target.value == "" || !this.validateEmail()) {
         this.requireAlert = true;
@@ -506,14 +513,16 @@ export default {
             .post(`http://cukcuk.manhnv.net/v1/employees`, vm.employee)
             .then((res) => {
               console.log(res);
-              vm.changeState();
-              //debugger;
-              alert("Lưu thành công");
+              vm.$emit("refreshTable");
+              debugger;
+
+              //alert("Lưu thành công");
               //debugger;
             })
             .catch((err) => {
               console.error(err);
             });
+          vm.changeState();
         } else if (vm.mode == 1) {
           vm.employee.DepartmentId = vm.department;
           vm.employee.PositionId = vm.position;
@@ -526,6 +535,10 @@ export default {
             )
             .then((res) => {
               console.log(res);
+              this.$emit("refreshTable");
+              alert("Sửa thành công");
+            })
+            .then(() => {
               vm.changeState();
             })
             .catch((err) => {
@@ -533,7 +546,7 @@ export default {
             });
         }
       } else if (!this.validateEmail()) {
-        // alert("Nhap lai email");
+        alert("Nhap lai email theo dung dinh dang");
       }
     },
     deleteEmployee() {
@@ -549,9 +562,21 @@ export default {
         .then((res) => {
           console.log(res);
           vm.changeState();
+          this.$emit("refreshTable");
         })
         .catch((err) => {
           console.error(err);
+        });
+    },
+    getNewEmployeeCode() {
+      axios
+        .get("http://cukcuk.manhnv.net/v1/Employees/NewEmployeeCode")
+        .then((res) => {
+          this.employee.EmployeeCode = res.data;
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
   },
@@ -587,7 +612,6 @@ export default {
               vm.dataComboboxWorkStatus.Name = element.WorkStatusName;
             }
           });
-
           vm.workstatus = vm.employee.WorkStatus;
         })
         .catch((err) => {
@@ -596,10 +620,22 @@ export default {
     },
     mode: function () {
       //Neu la them moi nhan vien thi don toan bo du lieu trong form thong tin chi tiet
-      // debugger;
+      debugger;
       if (this.mode == 0) {
         debugger;
         this.employee = {};
+        debugger;
+        axios
+          .get("http://cukcuk.manhnv.net/v1/Employees/NewEmployeeCode")
+          .then((res) => {
+            debugger;
+            //this.employee.EmployeeCode = res.data;
+            this.$set(this.employee, "EmployeeCode", res.data);
+            console.log(this.employee.EmployeeCode);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
     isSave: function () {

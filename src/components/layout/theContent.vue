@@ -28,6 +28,7 @@
       <input
         class="content-option-search-text"
         placeholder="Tìm kiếm theo Mã, tên hoặc Số điện thoại"
+        @keyup.enter="getInputSearch($event)"
       />
       <!-- </div> -->
       <div class="content-option-workspace">
@@ -64,7 +65,7 @@
         />
       </div>
 
-      <div class="content-option-reload">
+      <div class="content-option-reload" @click="refreshTable()">
         <!-- <img src="../../assets/icon/refresh.png" /> -->
       </div>
     </div>
@@ -87,7 +88,7 @@
             <th>Tình trạng công việc</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="isRefresh">
           <tr
             v-for="employee in employee"
             :key="employee.EmployeeId"
@@ -120,27 +121,55 @@
           :popUpShow="popUpShow"
           v-on:exitModalBox="exitModalBox()"
           v-on:warningSave="warningSave()"
+          v-on:refreshTable="refreshTable()"
         />
       </div>
     </div>
     <div class="paging-bar">
       <div class="paging-bar-note-left">Hiển thị 1-10/1000 nhân viên</div>
-      <div class="paging-bar-note-right">10 nhân viên/trang</div>
+      <div class="paging-bar-note-right">
+        <div class="pagging-dropdown-icon">
+          <i class="fas fa-chevron-down" @click="showPaggingBox()"></i>
+        </div>
+
+        <div class="pagging-box" v-if="showPagging">
+          <div
+            class="pagging-item"
+            v-for="(item, index) in numberRecordInOnePage"
+            :key="index"
+            @click="getInforBtnPageNumber($event)"
+          >
+            <span>{{ item }}</span> nhân viên/trang
+          </div>
+        </div>
+        {{ pageSize }} nhân viên/trang
+      </div>
       <div class="paging-bar-btn">
-        <div class="paging-bar-btn-first-page">
+        <div class="paging-bar-btn-first-page" @click="firstPage()">
           <img src="../../assets/icon/btn-firstpage.svg" />
         </div>
-        <div class="paging-bar-btn-prev-page">
+        <div class="paging-bar-btn-prev-page" @click="prevPage()">
           <img src="../../assets/icon/btn-prev-page.svg" />
         </div>
-        <div class="page-number-one">1</div>
+
+        <!-- <div class="page-number-one">1</div>
         <div class="paging-bar-btn-page-number">2</div>
         <div class="paging-bar-btn-page-number">3</div>
-        <div class="paging-bar-btn-page-number">4</div>
-        <div class="paging-bar-btn-next-page">
+        <div class="paging-bar-btn-page-number">4</div> -->
+        <div
+          class="paging-bar-btn-page-number"
+          :class="{ active: pageCurrent == page ? true : false }"
+          v-for="page in pages"
+          :key="page"
+          @click="getValuePageNumber(page)"
+        >
+          {{ page }}
+        </div>
+
+        <div class="paging-bar-btn-next-page" @click="nextPage()">
           <img src="../../assets/icon/btn-next-page.svg" />
         </div>
-        <div class="paging-bar-btn-last-page">
+        <div class="paging-bar-btn-last-page" @click="lastPage()">
           <img src="../../assets/icon/btn-lastpage.svg" />
         </div>
       </div>
@@ -171,19 +200,56 @@ export default {
     msg: String,
   },
   mounted() {
-    var vm = this;
+    // var vm = this;
+    // axios
+    //   .get("http://cukcuk.manhnv.net/v1/Employees")
+    //   .then((res) => {
+    //     console.log(res);
+    //     vm.employee = res.data;
+    //   })
+    //   .catch((res) => {
+    //     console.log(res);
+    //   });
     axios
-      .get("http://cukcuk.manhnv.net/v1/Employees")
+      .get(
+        `http://cukcuk.manhnv.net/v1/Employees/Filter?pageSize=${this.pageSize}&pageNumber=${this.pageCurrent}&employeeCode=NV`
+      )
       .then((res) => {
-        console.log(res);
-        vm.employee = res.data;
+        this.employee = res.data.Data;
+        this.totalpage = res.data.TotalPage;
+        this.totalRecord = res.data.TotalRecord;
+        let pageObject = this.paginate(
+          this.totalRecord,
+          this.pageCurrent,
+          this.pageSize,
+          this.maxPages,
+          this.totalpage
+        );
+        this.startIndex = pageObject.startIndex + 1;
+        this.endIndex = pageObject.endPage + 1;
+        this.pages = pageObject.pages;
+        console.log(this.employee);
+        console.log(this.pages);
       })
-      .catch((res) => {
-        console.log(res);
+      .catch((err) => {
+        console.log(err);
       });
+    this.pageCurrent = 1;
   },
   data() {
     return {
+      showPagging: false,
+      numberRecordInOnePage: [10, 20, 30, 50],
+      pageSize: 10,
+      pageCurrent: 1,
+      totalpage: 0,
+      totalRecord: 0,
+      maxPages: 10,
+      startIndex: 1,
+      endIndex: 10,
+      pages: [],
+      searchText: "NV",
+      isRefresh: true,
       isDelete: false,
       btnDelete: false,
       deleteQueue: [],
@@ -217,6 +283,9 @@ export default {
       console.log(this.employeeId);
       console.log(this.employee);
     },
+    /**
+     * Xu ly su kien click vao tr trong table
+     */
     tdClickHandle(e, employeeId) {
       this.btnDelete = true;
       console.log(employeeId);
@@ -240,21 +309,33 @@ export default {
       }
       console.log(this.btnDelete);
     },
+    /**
+     * Xu ly su kien khi click btnDelete
+     */
     async btnDeleteClick() {
       await this.changeStatePopup();
       this.modePopup = 1;
     },
     deleteMul() {
       this.deleteQueue.forEach((item) => {
+        var index = this.deleteQueue.indexOf(item);
         axios
           .delete(`http://cukcuk.manhnv.net/v1/employees/${item}`)
           .then((res) => {
             console.log(res);
           })
+          .then(() => {
+            this.refreshTable();
+          })
           .catch((err) => {
             console.error(err);
           });
+        this.deleteQueue.splice(index, 1);
       });
+
+      if (this.deleteQueue.length == 0) {
+        this.btnDelete = false;
+      }
     },
     /**
      * Lay du lieu ve phong ban
@@ -337,6 +418,9 @@ export default {
         return "";
       }
     },
+    /**
+     * format tiền lương trước khi đẩy vào bảng
+     */
     formatSalary(money) {
       if (money) {
         var num = money.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
@@ -346,6 +430,221 @@ export default {
         return "";
       }
     },
+    showPaggingBox() {
+      this.showPagging = !this.showPagging;
+    },
+    /**
+     * Chuyen ve trang dau tien
+     */
+    firstPage() {
+      this.pageCurrent = 1;
+    },
+    /**
+     * Chuyen den trang cuoi cung
+     */
+    lastPage() {
+      this.pageCurrent = this.totalpage;
+      console.log(this.pageCurrent);
+    },
+    /**
+     * Chuyen ve trang lien truoc
+     */
+    nextPage() {
+      this.pageCurrent = this.pageCurrent + 1;
+    },
+    /**
+     * chuyen ve trang lien sau
+     */
+    prevPage() {
+      this.pageCurrent = this.pageCurrent - 1;
+    },
+    /**
+     * Lay so thu tu cua trang hien tai
+     */
+    getValuePageNumber(current) {
+      this.pageCurrent = current;
+      console.log(this.pageCurrent);
+    },
+    /**
+     * lay thong tin phan trang khi click vao btnPage
+     */
+    getInforBtnPageNumber(e) {
+      let value = e.target.innerText;
+      let finalValue = "";
+      for (let i = 0; i < 2; i++) {
+        finalValue += value[i];
+      }
+      this.showPagging = !this.showPagging;
+      finalValue = parseInt(finalValue, 10);
+      this.pageSize = finalValue;
+      this.pageCurrent = 1;
+    },
+    //Xử lý tính toán phân trang ( tổng số bản ghi, trang hiện tại, hiển thị thanh footer)
+    paginate(totalRecord, pageCurrent, pageSize, maxPages, totalPage) {
+      if (pageCurrent < 1) {
+        pageCurrent = 1;
+      } else if (pageCurrent > totalPage) {
+        pageCurrent = totalPage;
+      }
+
+      let startPage, endPage;
+      if (totalPage <= maxPages) {
+        // tổng số trang ít hơn tối đa để hiển thị tất cả các trang
+        startPage = 1;
+        endPage = totalPage;
+      } else {
+        // tổng số trang nhiều hơn tối đa => tính trang bắt đầu và trang kết thúc
+        let maxPagesBeforeCurrentPage = Math.floor(maxPages / 2);
+        let maxPagesAfterCurrentPage = Math.ceil(maxPages / 2) - 1;
+        if (pageCurrent <= maxPagesBeforeCurrentPage) {
+          // trang hiện tại gần đầu
+          startPage = 1;
+          endPage = maxPages;
+        } else if (pageCurrent + maxPagesAfterCurrentPage >= totalPage) {
+          // trang hiện tại gần cuối
+          startPage = totalPage - maxPages + 1;
+          endPage = totalPage;
+        } else {
+          // trang hiện tại nằm ở vùng giữa
+          startPage = pageCurrent - maxPagesBeforeCurrentPage;
+          endPage = pageCurrent + maxPagesAfterCurrentPage;
+        }
+
+        let pages = Array.from(Array(endPage + 1 - startPage).keys()).map(
+          (i) => startPage + i
+        );
+        var obj = {
+          totalRecord: totalRecord,
+          pageCurent: pageCurrent,
+          pageSize: pageSize,
+          totalPage: totalPage,
+          startPage: startPage,
+          endPage: endPage,
+          startIndex: startIndex,
+          endIndex: endIndex,
+          pages: pages,
+        };
+        return obj;
+      }
+      // tính chỉ số của bản ghi bắt đầu và kết thúc
+      let startIndex = (pageCurrent - 1) * pageSize;
+      let endIndex = Math.min(startIndex + pageSize - 1, totalRecord - 1);
+    },
+    /**
+     * Lay API Phan trang
+     */
+    pagingProcessData(pageSize, pageCurrent) {
+      this.isRefresh = !this.isRefresh;
+      this.employee = {};
+      axios
+        .get(
+          `http://cukcuk.manhnv.net/v1/Employees/Filter?pageSize=${pageSize}&pageNumber=${pageCurrent}&employeeCode=NV`
+        )
+        .then((res) => {
+          this.employee = res.data.Data;
+          this.totalpage = res.data.TotalPage;
+          this.totalRecord = res.data.TotalRecord;
+          let pageObject = this.paginate(
+            this.totalRecord,
+            this.pageCurrent,
+            this.pageSize,
+            this.maxPages,
+            this.totalpage
+          );
+          this.startIndex = pageObject.startIndex + 1;
+          this.endIndex = pageObject.endPage + 1;
+          this.pages = pageObject.pages;
+          this.isRefresh = !this.isRefresh;
+          console.log(this.pages);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    /**
+     * Load lại table
+     */
+    refreshTable() {
+      this.pageSize = 10;
+      this.pageCurrent = 1;
+      this.isRefresh = !this.isRefresh;
+      this.employee = {};
+      axios
+        .get(
+          `http://cukcuk.manhnv.net/v1/Employees/Filter?pageSize=${this.pageSize}&pageNumber=${this.pageCurrent}&employeeCode=NV`
+        )
+        .then((res) => {
+          this.employee = res.data.Data;
+          this.totalpage = res.data.TotalPage;
+          this.totalRecord = res.data.TotalRecord;
+          let pageObject = this.paginate(
+            this.totalRecord,
+            this.pageCurrent,
+            this.pageSize,
+            this.maxPages,
+            this.totalpage
+          );
+          this.startIndex = pageObject.startIndex + 1;
+          this.endIndex = pageObject.endPage + 1;
+          this.pages = pageObject.pages;
+          this.isRefresh = !this.isRefresh;
+          console.log(this.pages);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    /**
+     * Refresh lại danh sách khi thực hiện filter
+     */
+    refreshFilter(api) {
+      this.isRefresh = !this.isRefresh;
+      console.log(api);
+      let vm = this;
+      vm.employee = {};
+      // if (this.deleteQueue.length == 0) {
+      //   this.btnDelete = false;
+      // }
+      axios
+        .get(api)
+        .then((res) => {
+          vm.employee = res.data.Data;
+          this.isRefresh = !this.isRefresh;
+          console.log(vm.employee);
+          //this.showTable = !this.showTable;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    getInputSearch(e) {
+      this.searchText = e.target.value;
+    },
+    /**
+     * Thực hiện Filter trong form danh sách nhân viên
+     */
+    filters() {
+      // if (this.department && !this.position) {
+      //   this.refreshFilter(
+      //     `http://cukcuk.manhnv.net/v1/Employees/Filter?pageSize=100&pageNumber=1&employeeCode=NV&departmentId=${this.department}`
+      //   );
+      // } else if (this.position && !this.department) {
+      //   this.refreshFilter(
+      //     `http://cukcuk.manhnv.net/v1/Employees/Filter?pageSize=100&pageNumber=1&employeeCode=NV&positionId=${this.position}`
+      //   );
+      // } else if (!this.department && !this.position) {
+      //   this.refreshTable();
+      // } else if (this.department && this.position) {
+      //   this.refreshFilter(
+      //     `http://cukcuk.manhnv.net/v1/Employees/Filter?pageSize=100&pageNumber=1&employeeCode=NV&departmentId=${this.department}&positionId=${this.position}`
+      //   );
+      // }
+      this.refreshFilter(
+        `http://cukcuk.manhnv.net/v1/Employees/Filter?pageSize=${this.pageSize}&pageNumber=${this.pageCurrent}&employeeCode=${this.searchText}&departmentId=${this.department}&positionId=${this.position}`
+      );
+      console.log(this.pageCurrent);
+    },
   },
   computed: {
     showBtnDelete() {
@@ -354,6 +653,38 @@ export default {
       } else {
         return "none";
       }
+    },
+    // showPaggingBox() {
+    //   if (this.showPagging) {
+    //     return "block";
+    //   } else {
+    //     return "none";
+    //   }
+    // },
+  },
+  watch: {
+    position: function () {
+      this.filters();
+    },
+    department: function () {
+      this.filters();
+    },
+    searchText: function () {
+      if (!this.searchText) {
+        this.searchText = "NV";
+      }
+      this.filters();
+    },
+    pageCurrent: function () {
+      if (this.pageCurrent > this.totalpage) {
+        this.pageCurrent = this.totalpage;
+      } else if (this.pageCurrent < 1) {
+        this.pageCurrent = 1;
+      }
+      this.pagingProcessData(this.pageSize, this.pageCurrent);
+    },
+    pageSize: function () {
+      this.pagingProcessData(this.pageSize, this.pageCurrent);
     },
   },
 };

@@ -6,7 +6,7 @@
                 <div class="title-popup">
                     <p>Hủy thao tác thêm mới</p>
                 </div>
-                <div class="exit-popup">
+                <div class="exit-popup" v-on:click="changeState(1)">
                     <i id="exit-popup" class="fas fa-times"></i>
                 </div>
             </div>
@@ -30,8 +30,11 @@
                 </div>
             </div>
             <div class="button-popup">
-                <div class="btn-popup btn-continue" v-on:click="changeState(1)" >
+                <div class="btn-popup btn-continue" v-on:click="changeState(1)" v-if="type == 0||type == 2" >
                     <p>Tiếp tục nhập</p>
+                </div>
+                <div class="btn-popup btn-close" v-on:click="changeState(1)" v-if="type == 1">
+                    <p>Đóng</p>
                 </div>
                 <div class="btn-popup btn-close" v-on:click="changeState(0)" v-if="type == 0">
                     <p>Đóng</p>

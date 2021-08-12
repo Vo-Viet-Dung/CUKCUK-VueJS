@@ -6,26 +6,21 @@
     position: fixed;
     background-color: rgba(0, 0, 0, 0.5);
     display: block;
-    overflow: scroll;
-    overflow-x: auto;
-    overflow-y: auto;
+    justify-content: center;
+    overflow-y: scroll;
     z-index: 40;
 }
 
 .box-infor {
-    height: 900px;
-    width: 700px;
+    height: 660px;
+    width: 804px;
     background-color: #fff;
     /* align-items: center; */
-    /* top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0; */
     border-radius: 4px;
     position: absolute;
     top: 50%;
     right: 50%;
-    margin-top: -450px;
+    margin-top: -330px;
     margin-right: -350px;
     z-index: 40;
 }

@@ -1,9 +1,11 @@
 .box-infor-content {
     position: absolute;
     top: 49px;
-    left: 226px;
-    height: calc(900px - 49px - 49px);
+    left: 298px;
+    height: calc(660px - 49px - 49px);
+    overflow: hidden;
     z-index: 10;
+    overflow-y: scroll;
 }
 
 .box-infor-content .content-private-infor {

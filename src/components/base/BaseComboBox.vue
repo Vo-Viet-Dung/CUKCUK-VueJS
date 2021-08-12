@@ -92,7 +92,7 @@ export default {
       axios
         .get(this.api)
         .then((res) => {
-          // console.log(res);
+          //console.log(res);
           this.items = [];
           if (this.mode == 1) {
             this.items.push({

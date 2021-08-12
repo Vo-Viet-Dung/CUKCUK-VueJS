@@ -294,7 +294,7 @@
  }
  
  table tr:hover {
-     background-color: #bbb;
+     background-color: #E9EBEE;
  }
  
  table tr td {
@@ -334,10 +334,9 @@
  /* table tr:nth-child(even) {
      background-color: #E9EBEE;
  } */
- 
- table tr:nth-child(even):hover {
+ /* table tr:nth-child(even):hover {
      background-color: #bbb;
- }
+ } */
  /* Phan thanh chuyen page */
  
  .content .paging-bar {
@@ -347,17 +346,58 @@
  
  .content .paging-bar .paging-bar-note-left {
      position: absolute;
+     align-self: center;
      left: 16px;
-     line-height: 56px;
+     height: 40px;
+     line-height: 40px;
+     background-color: #fff;
+     padding-left: 16px;
+     padding-right: 16px;
  }
  
  .content .paging-bar .paging-bar-note-right {
+     display: flex;
      position: absolute;
      right: 16px;
      line-height: 40px;
      height: 40px;
      align-self: center;
      background-color: #fff;
+     /* padding-left: 16px; */
+     padding-right: 16px;
+     z-index: 0;
+     min-width: 162px;
+ }
+ 
+ .pagging-dropdown-icon {
+     height: 40px;
+     padding-left: 16px;
+     padding-right: 8px;
+ }
+ 
+ .pagging-dropdown-icon i:hover {
+     background-color: #bbb;
+ }
+ 
+ .pagging-box {
+     position: absolute;
+     right: 0px;
+     bottom: 46px;
+     /* line-height: 40px; */
+     background-color: #fff;
+     width: 100%;
+     align-self: center;
+     border-radius: 4px;
+     box-shadow: 0px 1px 8px 0px rgb(219, 219, 219);
+     display: block;
+     z-index: 9;
+ }
+ 
+ .pagging-item {
+     padding-left: 16px;
+     height: 40px;
+     line-height: 40px;
+     cursor: pointer;
  }
  
  .content .paging-bar .paging-bar-btn {
@@ -368,8 +408,10 @@
      display: flex;
      /* border: 1px solid #000; */
      align-self: center;
-     margin: auto 0;
-     flex-basis: calc(100vh - 221px);
+     justify-content: center;
+     transform: translate(-30%);
+     /* margin: auto 0;
+     flex-basis: calc(100vh - 221px); */
  }
  
  .content .paging-bar .paging-bar-btn-page-number {
@@ -377,14 +419,15 @@
      width: 34px;
      height: 34px;
      line-height: 34px;
-     border: 1px solid #bbb;
-     background-color: #E9EBEE;
+     border: 1px solid #E9EBEE;
+     /* background-color: #E9EBEE; */
      border-radius: 50%;
      align-self: center;
      align-items: center;
      text-align: center;
      margin-left: 8px;
      margin-right: 8px;
+     cursor: pointer;
      /* text-align: center; */
  }
  
@@ -399,6 +442,11 @@
      background-repeat: no-repeat;
      align-self: center;
      margin-right: 8px;
+     cursor: pointer;
+ }
+ 
+ .content .paging-bar .paging-bar-btn .paging-bar-btn-first-page:hover {
+     background-color: #bbb;
  }
  
  .content .paging-bar .paging-bar-btn .paging-bar-btn-prev-page {
@@ -407,6 +455,11 @@
      background-size: contain;
      background-repeat: no-repeat;
      align-self: center;
+     cursor: pointer;
+ }
+ 
+ .content .paging-bar .paging-bar-btn .paging-bar-btn-prev-page:hover {
+     background-color: #bbb;
  }
  
  .content .paging-bar .paging-bar-btn .paging-bar-btn-next-page {
@@ -415,6 +468,11 @@
      background-size: contain;
      background-repeat: no-repeat;
      align-self: center;
+     cursor: pointer;
+ }
+ 
+ .content .paging-bar .paging-bar-btn .paging-bar-btn-next-page:hover {
+     background-color: #bbb;
  }
  
  .content .paging-bar .paging-bar-btn .paging-bar-btn-last-page {
@@ -424,6 +482,11 @@
      background-repeat: no-repeat;
      align-self: center;
      margin-left: 8px;
+     cursor: pointer;
+ }
+ 
+ .content .paging-bar .paging-bar-btn .paging-bar-btn-last-page:hover {
+     background-color: #bbb;
  }
  
  .content .paging-bar .page-number-one {
@@ -442,6 +505,6 @@
      margin-right: 8px;
  }
  
- .page-number:active {
+ .active {
      background-color: #01B075;
  }
