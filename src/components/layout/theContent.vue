@@ -488,14 +488,20 @@ export default {
       }
 
       let startPage, endPage;
+      // tổng số trang nhiều hơn tối đa => tính trang bắt đầu và trang kết thúc
+      let maxPagesBeforeCurrentPage;
+      let maxPagesAfterCurrentPage;
       if (totalPage <= maxPages) {
         // tổng số trang ít hơn tối đa để hiển thị tất cả các trang
         startPage = 1;
         endPage = totalPage;
+        // tổng số trang nhiều hơn tối đa => tính trang bắt đầu và trang kết thúc
+        maxPagesBeforeCurrentPage = Math.floor(totalPage / 2);
+        maxPagesAfterCurrentPage = Math.ceil(totalPage / 2) - 1;
       } else {
         // tổng số trang nhiều hơn tối đa => tính trang bắt đầu và trang kết thúc
-        let maxPagesBeforeCurrentPage = Math.floor(maxPages / 2);
-        let maxPagesAfterCurrentPage = Math.ceil(maxPages / 2) - 1;
+        maxPagesBeforeCurrentPage = Math.floor(maxPages / 2);
+        maxPagesAfterCurrentPage = Math.ceil(maxPages / 2) - 1;
         if (pageCurrent <= maxPagesBeforeCurrentPage) {
           // trang hiện tại gần đầu
           startPage = 1;
@@ -509,26 +515,25 @@ export default {
           startPage = pageCurrent - maxPagesBeforeCurrentPage;
           endPage = pageCurrent + maxPagesAfterCurrentPage;
         }
-
-        let pages = Array.from(Array(endPage + 1 - startPage).keys()).map(
-          (i) => startPage + i
-        );
-        var obj = {
-          totalRecord: totalRecord,
-          pageCurent: pageCurrent,
-          pageSize: pageSize,
-          totalPage: totalPage,
-          startPage: startPage,
-          endPage: endPage,
-          startIndex: startIndex,
-          endIndex: endIndex,
-          pages: pages,
-        };
-        return obj;
       }
+      let pages = Array.from(Array(endPage + 1 - startPage).keys()).map(
+        (i) => startPage + i
+      );
       // tính chỉ số của bản ghi bắt đầu và kết thúc
       let startIndex = (pageCurrent - 1) * pageSize;
       let endIndex = Math.min(startIndex + pageSize - 1, totalRecord - 1);
+      var obj = {
+        totalRecord: totalRecord,
+        pageCurent: pageCurrent,
+        pageSize: pageSize,
+        totalPage: totalPage,
+        startPage: startPage,
+        endPage: endPage,
+        startIndex: startIndex,
+        endIndex: endIndex,
+        pages: pages,
+      };
+      return obj;
     },
     /**
      * Lay API Phan trang
